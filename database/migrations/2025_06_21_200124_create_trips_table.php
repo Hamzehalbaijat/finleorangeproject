@@ -27,8 +27,8 @@ return new class extends Migration
         Schema::create('trips', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('start_stop_id')->constrained('route_stops');
-            $table->foreignId('end_stop_id')->constrained('route_stops');
+            $table->foreignId('bus_id')->constrained('buses');
+            $table->foreignId('route_id')->constrained('route');
             $table->timestamp('start_time')->nullable();
             $table->timestamp('end_time')->nullable();
             $table->enum('status', ['planned', 'in_progress', 'completed', 'cancelled'])->default('planned');

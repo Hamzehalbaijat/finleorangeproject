@@ -10,7 +10,6 @@ class RouteStopSeeder extends Seeder
     public function run()
     {
         RouteStop::insert([
-            // Amman to Zarqa Route (Route ID 1)
             [
                 'route_id' => 1,
                 'name' => 'Amman 7th Circle',

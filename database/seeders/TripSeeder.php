@@ -60,8 +60,8 @@ class TripSeeder extends Seeder
             // Insert trip record
             DB::table('trips')->insert([
                 'user_id'        => $userId,
-                'start_stop_id'  => $startStopId,
-                'end_stop_id'    => $endStopId,
+                'bus_id'  => $busId,
+                'route_id'    => $routeId,
                 'start_time'     => $startTime,
                 'end_time'       => $endTime,
                 'status'         => $status,
