@@ -2,42 +2,44 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\User;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
         User::insert([
             [
                 'name' => 'Admin User',
-                'email' => 'admin@example.com',
-                'phone' => '0790000001',
+                'email' => 'admin@jo-bus.com',
+                'phone' => '962790000001',
                 'password' => Hash::make('password'),
                 'role' => 'admin',
-                'balance' => 100.00,
+                'balance' => 1000.00,
+                'nfc_card_id' => 'NFC-ADM-001',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Driver One',
-                'email' => 'driver1@example.com',
-                'phone' => '0790000002',
+                'name' => 'Driver Ahmad',
+                'email' => 'ahmad@jo-bus.com',
+                'phone' => '962790000002',
                 'password' => Hash::make('password'),
                 'role' => 'driver',
-                'balance' => 50.00,
+                'balance' => 500.00,
+                'nfc_card_id' => 'NFC-DRV-001',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Passenger One',
-                'email' => 'passenger1@example.com',
-                'phone' => '0790000003',
+                'name' => 'Passenger Sara',
+                'email' => 'sara@jo-bus.com',
+                'phone' => '962790000003',
                 'password' => Hash::make('password'),
                 'role' => 'passenger',
-                'balance' => 20.00,
+                'balance' => 150.00,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

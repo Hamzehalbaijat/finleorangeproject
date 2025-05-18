@@ -17,6 +17,8 @@ return new class extends Migration
             $table->decimal('latitude', 10, 8);
             $table->decimal('longitude', 11, 8);
             $table->string('image')->nullable();
+            $table->time('opening_time')->nullable();
+            $table->time('closing_time')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

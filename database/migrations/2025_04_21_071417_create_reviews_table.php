@@ -13,8 +13,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('bus_id')->constrained('buses');
+            $table->foreignId('driver_id')->constrained('users');
             $table->integer('rating')->between(1, 5);
             $table->text('comment')->nullable();
+            $table->enum('type', ['bus', 'driver', 'service'])->default('bus');
             $table->softDeletes();
             $table->timestamps();
         });

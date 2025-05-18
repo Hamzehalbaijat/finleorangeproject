@@ -22,36 +22,37 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-    
-        if (Auth::attempt($request->only('email', 'password'))) {
-            $request->session()->regenerate();
-    
-            // Use your existing model methods for redirection
-            $user = auth()->user();
-            
-            if ($user->isPassenger()) {
-                return redirect()->route('passenger.dashboard');
-            } 
-            elseif ($user->isDriver()) {
-                return redirect()->route('driver.dashboard');
-            }
-            elseif ($user->isAdmin()) {
-                return redirect()->route('admin.dashboard');
-            }
-    
-            return redirect()->intended('/');
+    // app/Http/Controllers/Auth/AuthenticatedSessionController.php
+
+public function store(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
+
+    if (Auth::attempt($request->only('email', 'password'))) {
+        $request->session()->regenerate();
+
+        $user = Auth::user();
+
+        if ($user->isPassenger()) {
+            return redirect()->route('passenger.dashboard');
+        } 
+        elseif ($user->isDriver()) {
+            return redirect()->route('driver.dashboard');
         }
-    
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+        elseif ($user->isAdmin()) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        return redirect()->intended('/');
     }
+
+    return back()->withErrors([
+        'email' => 'بيانات الاعتماد غير صحيحة.',
+    ]);
+}
 
     /**
      * Destroy an authenticated session.

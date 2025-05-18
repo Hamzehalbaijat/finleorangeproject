@@ -13,9 +13,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users');
             $table->string('title');
-            $table->morphs('notifiable');
             $table->text('message');
+            $table->enum('type', ['trip', 'payment', 'alert', 'promotion', 'system']);
+            $table->json('data')->nullable();
             $table->boolean('is_read')->default(false);
+            $table->timestamp('read_at')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

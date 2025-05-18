@@ -1,7 +1,6 @@
-@extends('layouts.passenger')
+@extends('layouts.app')
 
 @section('title', 'Passenger Dashboard')
-
 @section('hero-section')
 <div class="hero-section">
     <!-- Modern Carousel with Gradient Overlay -->
@@ -128,7 +127,10 @@
             </div>
         </div>
     </div>
-
+    </div>
+    <!-- End of Hero Section -->
+@endsection
+@section('content')
     <!-- Map and Buses Section -->
     <div class="container mt-5">
         <div class="row">
@@ -156,7 +158,7 @@
                         <h5 class="mb-0">
                             <i class="fas fa-bus me-2"></i> الباصات المتاحة
                         </h5>
-                    </div>  
+                    </div>   
                     <div class="card-body p-0">
                         <div id="availableBusesList" class="buses-list">
                             <div class="list-group list-group-flush">
@@ -196,255 +198,40 @@
             </div>
         </div>
     </div>
-</div>
-@endsection
- 
-@section('content')
-<div class="container py-5">
-    <!-- Quick Stats Cards -->
-    <div class="row mb-5">
-        <div class="col-md-4 mb-4">
-            <div class="card stat-card balance-card h-100">
-                <div class="card-body text-center">
-                    <div class="stat-icon bg-primary-light">
-                        <i class="fas fa-wallet text-primary"></i>
-                    </div>
-                    <h3 class="card-title text-primary mt-3">
-                        Your Balance
-                    </h3>
-                    <p class="display-5 fw-bold">JOD {{ number_format(auth()->user()->balance, 2) }}</p>
-                    <a href="{{ route('passenger.payments.index') }}" class="btn btn-primary btn-sm mt-2">
-                        <i class="fas fa-plus me-1"></i> Add Funds 
-                    </a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-4 mb-4">
-            <div class="card stat-card trips-card h-100">
-                <div class="card-body text-center">
-                    <div class="stat-icon bg-success-light">
-                        <i class="fas fa-bus text-success"></i>
-                    </div>
-                    <h3 class="card-title text-success mt-3">
-                        Active Trips
-                    </h3>
-                    <p class="display-5 fw-bold">{{ $activeTripsCount }}</p>
-                    <a href="{{ route('passenger.trips.active') }}" class="btn btn-success btn-sm mt-2">
-                        <i class="fas fa-eye me-1"></i> View Trips
-                    </a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-4 mb-4">
-            <div class="card stat-card notifications-card h-100">
-                <div class="card-body text-center">
-                    <div class="stat-icon bg-info-light">
-                        <i class="fas fa-bell text-info"></i>
-                    </div>
-                    <h3 class="card-title text-info mt-3">
-                        Notifications
-                    </h3>
-                    <p class="display-5 fw-bold">{{ $unreadNotificationsCount }}</p>
-                    <a href="{{ route('passenger.notifications.index') }}" class="btn btn-info btn-sm mt-2">
-                        <i class="fas fa-bell me-1"></i> View Alerts
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Upcoming Trips Section -->
-    <div class="row mb-5">
-        <div class="col-12">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-white border-0">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h3 class="mb-0">
-                            <i class="fas fa-calendar-alt text-primary me-2"></i> Upcoming Trips
-                        </h3>
-                        <a href="{{ route('passenger.trips.index') }}" class="btn btn-sm btn-outline-primary">
-                            View All <i class="fas fa-arrow-right ms-1"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="card-body">
-                    @if($upcomingTrips->isEmpty())
-                        <div class="empty-state text-center py-4">
-                            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
-                            <h5 class="text-muted">No Upcoming Trips</h5>
-                            <p class="text-muted">Search for buses to book your journey</p>
-                            <a href="#search-section" class="btn btn-primary btn-sm scroll-button">
-                                <i class="fas fa-search me-1"></i> Search Buses
-                            </a>
-                        </div>
-                    @else
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Bus</th>
-                                        <th>Route</th>
-                                        <th>Departure</th>
-                                        <th>Arrival</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($upcomingTrips as $trip)
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="bus-icon me-3">
-                                                    <i class="fas fa-bus"></i>
-                                                </div>
-                                                <div>
-                                                    <strong>{{ $trip->bus->plate_number }}</strong><br>
-                                                    <small class="text-muted">Driver: {{ $trip->bus->driver->name }}</small>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="route-direction">
-                                                <span class="from">{{ $trip->bus->from_location }}</span>
-                                                <i class="fas fa-arrow-right mx-2 text-muted"></i>
-                                                <span class="to">{{ $trip->bus->to_location }}</span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="departure-info">
-                                                <span class="time">{{ $trip->bus->departure_time }}</span><br>
-                                                <small class="text-muted">{{ $trip->bus->complex->name }}</small>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="arrival-info">
-                                                <span class="time">{{ $trip->bus->estimated_arrival_time }}</span><br>
-                                                <small class="text-muted">{{ $trip->destination }}</small>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            @if($trip->status === 'waiting')
-                                                <span class="badge bg-warning rounded-pill px-3 py-2">
-                                                    <i class="fas fa-clock me-1"></i> Waiting
-                                                </span>
-                                            @elseif($trip->status === 'on_board')
-                                                <span class="badge bg-primary rounded-pill px-3 py-2">
-                                                    <i class="fas fa-bus me-1"></i> On Board
-                                                </span>
-                                            @else
-                                                <span class="badge bg-success rounded-pill px-3 py-2">
-                                                    <i class="fas fa-check-circle me-1"></i> Completed
-                                                </span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <a href="{{ route('passenger.trips.show', $trip->id) }}" class="btn btn-sm btn-outline-primary rounded-pill">
-                                                <i class="fas fa-eye me-1"></i> Details
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @endif
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Recent Payments Section -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-white border-0">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h3 class="mb-0">
-                            <i class="fas fa-credit-card text-primary me-2"></i> Recent Payments
-                        </h3>
-                        <a href="{{ route('passenger.payments.history') }}" class="btn btn-sm btn-outline-primary">
-                            View All <i class="fas fa-arrow-right ms-1"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="card-body">
-                    @if($recentPayments->isEmpty())
-                        <div class="empty-state text-center py-4">
-                            <i class="fas fa-money-bill-wave fa-3x text-muted mb-3"></i>
-                            <h5 class="text-muted">No Payment History</h5>
-                            <p class="text-muted">Your payment transactions will appear here</p>
-                        </div>
-                    @else
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Amount</th>
-                                        <th>Method</th>
-                                        <th>Bus</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($recentPayments as $payment)
-                                    <tr>
-                                        <td>
-                                            <div class="payment-date">
-                                                <div class="date">{{ $payment->created_at->format('M d, Y') }}</div>
-                                                <div class="time text-muted">{{ $payment->created_at->format('H:i') }}</div>
-                                            </div>
-                                        </td>
-                                        <td class="fw-bold">
-                                            JOD {{ number_format($payment->amount, 2) }}
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-light text-dark rounded-pill px-3">
-                                                {{ strtoupper($payment->payment_method) }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div class="bus-info">
-                                                <div class="plate-number">{{ $payment->bus->plate_number }}</div>
-                                                <div class="route text-muted small">
-                                                    {{ $payment->bus->from_location }} → {{ $payment->bus->to_location }}
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            @if($payment->status === 'completed')
-                                                <span class="badge bg-success rounded-pill px-3 py-2">
-                                                    <i class="fas fa-check-circle me-1"></i> Completed
-                                                </span>
-                                            @elseif($payment->status === 'pending')
-                                                <span class="badge bg-warning rounded-pill px-3 py-2">
-                                                    <i class="fas fa-clock me-1"></i> Pending
-                                                </span>
-                                            @else
-                                                <span class="badge bg-danger rounded-pill px-3 py-2">
-                                                    <i class="fas fa-times-circle me-1"></i> Failed
-                                                </span>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @endif
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 @endsection
 
 @push('styles')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
 <style>
+      /* Keep original styles, add Leaflet-specific adjustments */
+    .map-container {
+        height: 500px;
+        width: 100%;
+        border-radius: 8px;
+        overflow: hidden;
+        z-index: 1;
+    }
+
+    .leaflet-routing-container {
+        display: none; /* We'll show info in our own panel */
+    }
+
+    .leaflet-marker-icon {
+        filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3));
+    }
+
+    /* Add custom marker pulse animation */
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+        100% { transform: scale(1); }
+    }
+    
+    .bus-marker {
+        animation: pulse 2s infinite;
+    }
     /* Hero Section Styles */
     .hero-section {
         position: relative;
@@ -659,79 +446,80 @@
 @endpush
 
 @push('scripts')
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDwyPBQ7a79jd2KazJQYbTwPoRW5mayNrk&libraries=places,directions,geometry"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize the map with Jordan view
-    const map = new google.maps.Map(document.getElementById('routeMap'), {
-        center: {lat: 31.9454, lng: 35.9284}, // Center of Jordan
-        zoom: 7,
-        mapTypeId: 'roadmap',
-        styles: [
-            {
-                "featureType": "poi",
-                "stylers": [{ "visibility": "off" }]
-            },
-            {
-                "featureType": "transit",
-                "elementType": "labels.icon",
-                "stylers": [{ "visibility": "off" }]
-            }
-        ],
-        zoomControl: true,
-        gestureHandling: 'cooperative'
+    // Initialize Leaflet Map
+    const map = L.map('routeMap').setView([31.9454, 35.9284], 7);
+    
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Map Objects
+    let routingControl = null;
+    let currentMarkers = [];
+    let busMarkers = [];
+
+    // Custom Icons
+    const startIcon = L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
     });
 
-    const directionsService = new google.maps.DirectionsService();
-    const directionsRenderer = new google.maps.DirectionsRenderer({
-        map: map,
-        suppressMarkers: true,
-        polylineOptions: {
-            strokeColor: '#4e54c8',
-            strokeOpacity: 0.8,
-            strokeWeight: 5
+    const endIcon = L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    const busIcon = L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    // Clear existing route and markers
+    function clearMap() {
+        if (routingControl) {
+            map.removeControl(routingControl);
+            routingControl = null;
         }
-    });
-
-    // Marker icons
-    const startMarkerIcon = {
-        url: "https://maps.google.com/mapfiles/ms/icons/green-dot.png",
-        scaledSize: new google.maps.Size(40, 40)
-    };
-    
-    const endMarkerIcon = {
-        url: "https://maps.google.com/mapfiles/ms/icons/red-dot.png",
-        scaledSize: new google.maps.Size(40, 40)
-    };
-    
-    const busMarkerIcon = {
-        url: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png",
-        scaledSize: new google.maps.Size(32, 32)
-    };
-
-    let markers = [];
-    
-    function clearMarkers() {
-        markers.forEach(marker => marker.setMap(null));
-        markers = [];
+        currentMarkers.forEach(marker => map.removeLayer(marker));
+        currentMarkers = [];
     }
 
-    // Show initial Jordan map with no route
+    // Clear bus markers
+    function clearBusMarkers() {
+        busMarkers.forEach(marker => map.removeLayer(marker));
+        busMarkers = [];
+    }
+
+    // Show initial Jordan map
     function showInitialMap() {
-        directionsRenderer.setMap(null);
-        clearMarkers();
-        map.setCenter({lat: 31.9454, lng: 35.9284});
-        map.setZoom(7);
-        
+        clearMap();
+        clearBusMarkers();
+        map.setView([31.9454, 35.9284], 7);
         document.getElementById('routeInfo').innerHTML = `
-            <div class="alert alert-info mb-0">
-                <i class="fas fa-info-circle me-2"></i>
-                Select departure and destination to view available routes
+            <div class="alert alert-info mb-0 rounded-0 rounded-bottom">
+                <i class="fas fa-info-circle me-2"></i> اختر نقاط الانطلاق والوجهة لعرض
             </div>
         `;
     }
 
-    // Calculate and display route
+    // Main route calculation function
     function calculateAndDisplayRoute(fromId, toId, fromName, toName) {
         const fromSelect = document.getElementById('from');
         const toSelect = document.getElementById('to');
@@ -743,7 +531,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const fromLng = parseFloat(fromOption.dataset.lng);
         const toLat = parseFloat(toOption.dataset.lat);
         const toLng = parseFloat(toOption.dataset.lng);
-        
+
+        // Show loading state
         document.getElementById('routeInfo').innerHTML = `
             <div class="text-center py-2">
                 <div class="spinner-border text-primary" role="status">
@@ -752,162 +541,170 @@ document.addEventListener('DOMContentLoaded', function() {
                 <p class="mt-2">Finding routes from ${fromName} to ${toName}...</p>
             </div>
         `;
-        
-        directionsService.route({
-            origin: {lat: fromLat, lng: fromLng},
-            destination: {lat: toLat, lng: toLng},
-            travelMode: 'DRIVING',
-            provideRouteAlternatives: false,
-            unitSystem: google.maps.UnitSystem.METRIC
-        }, function(response, status) {
-            if (status === 'OK') {
-                directionsRenderer.setMap(map);
-                directionsRenderer.setDirections(response);
-                clearMarkers();
-                
-                const route = response.routes[0];
-                const leg = route.legs[0];
-                
-                // Add start marker
-                markers.push(new google.maps.Marker({
-                    position: leg.start_location,
-                    map: map,
-                    title: 'Departure: ' + fromName,
-                    icon: startMarkerIcon
-                }));
-                
-                // Add end marker
-                markers.push(new google.maps.Marker({
-                    position: leg.end_location,
-                    map: map,
-                    title: 'Destination: ' + toName,
-                    icon: endMarkerIcon
-                }));
-                
-                // Add bus markers for available trips
-                @foreach($availableBuses as $bus)
-                    markers.push(new google.maps.Marker({
-                        position: {lat: {{ $bus->current_latitude }}, lng: {{ $bus->current_longitude }}},
-                        map: map,
-                        title: 'Bus: ' + '{{ $bus->plate_number }}',
-                        icon: busMarkerIcon
-                    }));
-                @endforeach
-                
-                document.getElementById('routeInfo').innerHTML = `
-                    <div class="alert alert-light">
-                        <i class="fas fa-info-circle me-2"></i>
-                        The route shown is approximate and may not represent the exact bus path
+
+        // Clear previous map elements
+        clearMap();
+        clearBusMarkers();
+
+        // Add start and end markers
+        const startMarker = L.marker([fromLat, fromLng], { icon: startIcon })
+            .bindPopup(`<b>${fromName}</b>`)
+            .addTo(map);
+        currentMarkers.push(startMarker);
+
+        const endMarker = L.marker([toLat, toLng], { icon: endIcon })
+            .bindPopup(`<b>${toName}</b>`)
+            .addTo(map);
+        currentMarkers.push(endMarker);
+
+        // Add bus markers
+        @foreach($availableBuses as $bus)
+            const busMarker = L.marker([{{ $bus->current_latitude }}, {{ $bus->current_longitude }}], {
+                icon: busIcon,
+                className: 'bus-marker'
+            }).bindPopup(`
+                <b>{{ $bus->plate_number }}</b><br>
+                {{ $bus->driver->name }}<br>
+                {{ $bus->departure_time }}
+            `).addTo(map);
+            busMarkers.push(busMarker);
+        @endforeach
+
+        // Setup routing control
+        routingControl = L.Routing.control({
+            waypoints: [
+                L.latLng(fromLat, fromLng),
+                L.latLng(toLat, toLng)
+            ],
+            routeWhileDragging: false,
+            show: false,
+            addWaypoints: false,
+            draggableWaypoints: false,
+            fitSelectedRoutes: true,
+            lineOptions: {
+                styles: [{ color: '#4e54c8', opacity: 0.8, weight: 5 }]
+            },
+            createMarker: () => null
+        }).addTo(map);
+
+        // Handle route found
+        routingControl.on('routesfound', function(e) {
+            const route = e.routes[0];
+            const distance = (route.summary.totalDistance / 1000).toFixed(1) + ' km';
+            const time = Math.floor(route.summary.totalTime / 60) + ' دقيقة';
+
+            document.getElementById('routeInfo').innerHTML = `
+                <div class="alert alert-light rounded-0">
+                    <i class="fas fa-info-circle me-2"></i> المسار المعروض تقريبي وقد لا يمثل مسار الباص الدقيق
+                </div>
+                <div class="route-info-card p-3">
+                    <div class="d-flex justify-content-between">
+                        <span><i class="fas fa-road me-2"></i> ${distance}</span>
+                        <span><i class="fas fa-clock me-2"></i> ${time}</span>
                     </div>
-                    <div class="route-info-card mt-2">
-                        <div class="d-flex justify-content-between">
-                            <span><i class="fas fa-road me-2"></i> ${leg.distance.text}</span>
-                            <span><i class="fas fa-clock me-2"></i> ${leg.duration.text}</span>
-                        </div>
-                    </div>
-                `;
-                
-                const bounds = new google.maps.LatLngBounds();
-                bounds.extend(leg.start_location);
-                bounds.extend(leg.end_location);
-                map.fitBounds(bounds);
-                
-            } else {
-                console.error('Directions request failed:', status);
-                document.getElementById('routeInfo').innerHTML = `
-                    <div class="alert alert-danger">
-                        <i class="fas fa-exclamation-triangle me-2"></i>
-                        Could not find route from ${fromName} to ${toName}. Please check your locations and try again.
-                    </div>
-                `;
-                showInitialMap();
-            }
+                </div>
+            `;
+
+            // Adjust map view
+            const bounds = L.latLngBounds([fromLat, fromLng], [toLat, toLng]);
+            map.fitBounds(bounds.pad(0.2));
+        });
+
+        // Handle routing errors
+        routingControl.on('routingerror', function(e) {
+            document.getElementById('routeInfo').innerHTML = `
+                <div class="alert alert-danger rounded-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    تعذر العثور على مسار من ${fromName} إلى ${toName}
+                </div>
+            `;
+            showInitialMap();
         });
     }
 
-    // Show initial map when page loads
-    showInitialMap();
-
-    // Form submission handler
+    // Form Submission Handler
     document.getElementById('tripSearchForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
         const fromId = document.getElementById('from').value;
         const toId = document.getElementById('to').value;
-        const fromName = document.getElementById('from').options[document.getElementById('from').selectedIndex].text;
-        const toName = document.getElementById('to').options[document.getElementById('to').selectedIndex].text;
+        const fromName = document.getElementById('from').selectedOptions[0].text;
+        const toName = document.getElementById('to').selectedOptions[0].text;
         
         if (fromId && toId) {
-            if(fromId === toId) {
-                alert('Departure and destination cannot be the same');
+            if (fromId === toId) {
+                alert('لا يمكن أن تكون نقطة البداية والنهاية نفسها');
                 return;
             }
             calculateAndDisplayRoute(fromId, toId, fromName, toName);
         } else {
-            alert('Please select both departure and destination');
+            alert('الرجاء اختيار كل من نقطة البداية والوجهة');
         }
     });
 
-    // Current location button handler
+    // Current Location Handler
     document.getElementById('useCurrentLocation').addEventListener('click', function() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                const userLat = position.coords.latitude;
-                const userLng = position.coords.longitude;
-                
-                // Find the nearest complex to the user's location
-                let nearestComplex = null;
-                let minDistance = Infinity;
-                
-                const fromSelect = document.getElementById('from');
-                const options = fromSelect.options;
-                
-                for (let i = 0; i < options.length; i++) {
-                    if (options[i].value) {
-                        const complexLat = parseFloat(options[i].dataset.lat);
-                        const complexLng = parseFloat(options[i].dataset.lng);
-                        
-                        const distance = google.maps.geometry.spherical.computeDistanceBetween(
-                            new google.maps.LatLng(userLat, userLng),
-                            new google.maps.LatLng(complexLat, complexLng)
-                        );
-                        
-                        if (distance < minDistance) {
-                            minDistance = distance;
-                            nearestComplex = options[i];
-                        }
+        map.locate({
+            setView: false,
+            enableHighAccuracy: true
+        }).on('locationfound', function(e) {
+            const userLat = e.latitude;
+            const userLng = e.longitude;
+            
+            let nearestComplex = null;
+            let minDistance = Infinity;
+            
+            const options = document.getElementById('from').options;
+            
+            for (let i = 0; i < options.length; i++) {
+                if (options[i].value) {
+                    const complexLat = parseFloat(options[i].dataset.lat);
+                    const complexLng = parseFloat(options[i].dataset.lng);
+                    
+                    const distance = map.distance(
+                        [userLat, userLng],
+                        [complexLat, complexLng]
+                    );
+                    
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        nearestComplex = options[i];
                     }
                 }
+            }
+            
+            if (nearestComplex) {
+                document.getElementById('from').value = nearestComplex.value;
+                document.getElementById('from').dispatchEvent(new Event('change'));
                 
-                if (nearestComplex) {
-                    fromSelect.value = nearestComplex.value;
-                    // Animate the selection
-                    fromSelect.classList.add('animate__animated', 'animate__pulse');
-                    setTimeout(() => {
-                        fromSelect.classList.remove('animate__animated', 'animate__pulse');
-                    }, 1000);
-                }
-            }, function(error) {
-                alert('Error getting your location: ' + error.message);
-            });
-        } else {
-            alert('Geolocation is not supported by your browser');
-        }
+                // Add visual feedback
+                const fromSelect = document.getElementById('from');
+                fromSelect.classList.add('animate__animated', 'animate__pulse');
+                setTimeout(() => {
+                    fromSelect.classList.remove('animate__animated', 'animate__pulse');
+                }, 1000);
+            }
+        }).on('locationerror', function(e) {
+            alert('خطأ في الحصول على الموقع: ' + e.message);
+        });
     });
 
-    // If search parameters exist in URL, show the route immediately
+    // Initial Map Setup
+    showInitialMap();
+
+    // Handle Initial Search Parameters
     @if(request()->has('from') && request()->has('to'))
         const fromId = "{{ request('from') }}";
         const toId = "{{ request('to') }}";
         const fromName = document.querySelector(`#from option[value="${fromId}"]`).text;
         const toName = document.querySelector(`#to option[value="${toId}"]`).text;
         
-        if(fromId && toId && fromId !== toId) {
+        if (fromId && toId && fromId !== toId) {
             calculateAndDisplayRoute(fromId, toId, fromName, toName);
         }
     @endif
-    
-    // Smooth scroll for buttons
+
+    // Smooth Scroll for Buttons
     document.querySelectorAll('.scroll-button').forEach(button => {
         button.addEventListener('click', function(e) {
             e.preventDefault();

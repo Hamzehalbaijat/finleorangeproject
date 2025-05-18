@@ -1,20 +1,25 @@
 <?php
 
 namespace Database\Seeders;
-use Illuminate\Database\Seeder;
+
 use App\Models\Review;
+use Illuminate\Database\Seeder;
 
 class ReviewSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
-        Review::create([
-            'user_id' => 3,
-            'bus_id' => 1,
-            'rating' => 4,
-            'comment' => 'Clean bus and friendly driver.',
-            'created_at' => now(),
-            'updated_at' => now(),
+        Review::insert([
+            [
+                'user_id' => 3,
+                'bus_id' => 1,
+                'driver_id' => 2,
+                'rating' => 4,
+                'comment' => 'Comfortable ride and professional service',
+                'type' => 'bus',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

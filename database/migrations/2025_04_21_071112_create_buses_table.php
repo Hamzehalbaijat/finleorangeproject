@@ -18,13 +18,17 @@ return new class extends Migration
             $table->time('estimated_arrival_time');
             $table->string('from_location');
             $table->string('to_location');
+            $table->string('current_location')->nullable();
             $table->decimal('current_latitude', 10, 8)->nullable();
             $table->decimal('current_longitude', 11, 8)->nullable();
             $table->integer('total_capacity');
             $table->integer('occupied_seats')->default(0);
+            $table->integer('available_seats')->virtualAs('total_capacity - occupied_seats');
             $table->decimal('fee', 8, 2);
             $table->enum('status1', ['Being packed', 'On the way', 'Reached']);
             $table->enum('status2', ['Full', 'Has empty seats']);
+            // $table->text('route_description')->nullable();
+            $table->string('color')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

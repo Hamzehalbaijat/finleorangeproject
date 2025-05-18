@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('subject');
             $table->text('message');
+            $table->text('response')->nullable();
             $table->enum('status', ['pending', 'responded'])->default('pending');
             $table->softDeletes();
             $table->timestamps();

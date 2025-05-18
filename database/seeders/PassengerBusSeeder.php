@@ -1,25 +1,28 @@
 <?php
 
 namespace Database\Seeders;
-use Illuminate\Database\Seeder;
+
 use App\Models\PassengerBus;
+use Illuminate\Database\Seeder;
 
 class PassengerBusSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
-        PassengerBus::create([
-            'passenger_id' => 3, // User with role 'passenger'
-            'bus_id' => 1,
-            'pickup_location' => 'Amman Terminal',
-            'pickup_latitude' => 31.9539,
-            'pickup_longitude' => 35.9106,
-            'destination' => 'Zarqa Station',
-            'destination_latitude' => 32.0728,
-            'destination_longitude' => 36.0880,
-            'status' => 'on_board',
-            'created_at' => now(),
-            'updated_at' => now(),
+        PassengerBus::insert([
+            [
+                'passenger_id' => 3,
+                'bus_id' => 1,
+                'pickup_location' => '7th Circle, Amman',
+                'pickup_latitude' => 31.963158,
+                'pickup_longitude' => 35.866489,
+                'destination' => 'Zarqa City Center',
+                'destination_latitude' => 32.072333,
+                'destination_longitude' => 36.094556,
+                'status' => 'on_board',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

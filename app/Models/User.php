@@ -32,21 +32,20 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function isAdmin()
-    {
-        return $this->role === 'admin';
-    }
+   public function isPassenger()
+{
+    return $this->role === 'passenger';
+}
 
-    public function isDriver()
-    {
-        return $this->role === 'driver';
-    }
+public function isDriver()
+{
+    return $this->role === 'driver';
+}
 
-    public function isPassenger()
-    {
-        return $this->role === 'passenger';
-    
-    }
+public function isAdmin()
+{
+    return $this->role === 'admin';
+}
     public function notifications()
     {
         return $this->hasMany(\App\Models\Notification::class);

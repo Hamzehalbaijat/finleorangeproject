@@ -19,142 +19,25 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        /* Base Styles */
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
-        }
-        
-        /* Navbar Styles */
-        .navbar {
+        /* Custom Bootstrap Overrides */
+        .navbar-custom {
+            background: linear-gradient(90deg, #fd7e14 0%, #0d6efd 100%);
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
-        /* Carousel Styles */
-        .carousel-indicators button {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            margin: 0 5px;
-            background-color: rgba(255,255,255,0.5);
-        }
-        
-        .carousel-indicators .active {
-            background-color: #fff;
-        }
-        
-        .carousel-caption {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            border-radius: 5px;
-            bottom: 40px;
-        }
-        
-        .carousel-caption h2 {
-            font-size: 2.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
-        
-        /* Search Box Styles */
-        .search-box {
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(5px);
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        
-        /* Map Styles */
-        #routeMap {
-            height: 450px;
-            width: 100%;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            background-color: #f5f5f5;
-        }
-        
-        .route-info-card {
-            background: white;
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 10px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        
-        /* Card Styles */
-        .card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: none;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-        
-        .card-header {
-            border-bottom: none;
-        }
-        
-        /* Table Styles */
-        .table-hover tbody tr:hover {
-            background-color: rgba(0, 123, 255, 0.05);
-        }
-        
-        /* Button Styles */
-        .btn {
-            font-weight: 500;
-            padding: 8px 16px;
-            border-radius: 6px;
-            transition: all 0.3s;
-        }
-        
-        .btn-outline-primary:hover {
-            color: white;
-        }
-        
-        /* Badge Styles */
-        .badge {
-            font-weight: 500;
-            padding: 5px 10px;
-        }
-        
-        /* Footer Styles */
-        footer {
+        .footer-custom {
             background-color: #343a40;
-            color: white;
         }
         
-        /* Utility Classes */
-        .bg-orange {
-            background-color: #fd7e14 !important;
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
         }
-        
-        .btn-outline-orange {
-            color: #fd7e14;
-            border-color: #fd7e14;
-        }
-        
-        .btn-outline-orange:hover {
-            background-color: #fd7e14;
-            color: white;
-        }
-        
-        .text-orange {
-            color: #fd7e14 !important;
-        }
-        
-        /* Responsive Adjustments */
-        @media (max-width: 768px) {
-            .carousel-caption h2 {
-                font-size: 1.8rem;
-            }
-            
-            .search-box {
-                padding: 15px !important;
-            }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
         }
     </style>
 
@@ -162,7 +45,11 @@
 </head>
 <body class="bg-light">
     <div class="d-flex flex-column min-vh-100">
-        @includeWhen(auth()->check(), 'layouts.navigation.' . auth()->user()->role)
+     @php
+    $user = auth()->user();
+@endphp
+
+@includeWhen($user, 'layouts.navigation.' . ($user->role ?? 'guest'))
         
         <!-- Hero Section -->
         @hasSection('hero-section')
@@ -170,14 +57,11 @@
         @endif
         
         <!-- Page Content -->
-        <main class="flex-grow-1 py-4">
-            @unless(isset($noContainer) && $noContainer)
-            <div class="container">
+        <main class="flex-grow-1">
+            <div class="container py-4">
+                @include('layouts.partials.header')
                 @yield('content')
             </div>
-            @else
-                @yield('content')
-            @endunless
         </main>
         
         @include('layouts.partials.footer')

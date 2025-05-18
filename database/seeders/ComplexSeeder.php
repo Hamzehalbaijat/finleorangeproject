@@ -1,42 +1,39 @@
 <?php
 
 namespace Database\Seeders;
-use Illuminate\Database\Seeder;
+
 use App\Models\Complex;
+use Illuminate\Database\Seeder;
 
 class ComplexSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
-        Complex::create([
-            'name' => 'Amman Station',
-            'description' => 'Main bus station in Amman.',
-            'location' => 'Amman, Jordan',
-            'latitude' => 31.9539,
-            'longitude' => 35.9106,
-            'created_at' => now(),
-            'updated_at' => now(),
+        Complex::insert([
+            [
+                'name' => 'Amman Central Station',
+                'description' => 'Main bus terminal in Amman',
+                'location' => 'Amman, Jordan',
+                'latitude' => 31.955399,
+                'longitude' => 35.928036,
+                'image' => 'amman-station.jpg',
+                'opening_time' => '05:00:00',
+                'closing_time' => '23:00:00',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Zarqa Transport Complex',
+                'description' => 'Main transportation hub in Zarqa',
+                'location' => 'Zarqa, Jordan',
+                'latitude' => 32.076671,
+                'longitude' => 36.088959,
+                'image' => 'zarqa-station.jpg',
+                'opening_time' => '06:00:00',
+                'closing_time' => '22:00:00',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
-
-        Complex::create([
-            'name' => 'Zarqa Station',
-            'description' => 'Main bus station in Zarqa.',
-            'location' => 'Zarqa, Jordan',
-            'latitude' => 32.0728,
-            'longitude' => 36.0880,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-        
-        Complex::create([
-            'name' => 'Irbid Station',
-            'description' => 'Main bus station in Irbid.',
-            'location' => 'Irbid, Jordan',
-            'latitude' => 32.5569,
-            'longitude' => 35.8497,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-        
     }
 }

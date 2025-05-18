@@ -1,104 +1,73 @@
 <?php
 
-namespace Database\Seeders;
-
-use App\Models\Bus;
-use App\Models\Trip;
-use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use App\Models\User;
+use App\Models\RouteStop;
+use Carbon\Carbon;
 
 class TripSeeder extends Seeder
 {
     public function run()
     {
-        // Get some buses and passengers
-        $bus1 = Bus::first();
-        $bus2 = Bus::skip(1)->first();
-        $passenger1 = User::where('role', 'passenger')->first();
-        $passenger2 = User::where('role', 'passenger')->skip(1)->first();
+        // Get all user IDs and route stop IDs
+        $userIds = User::pluck('id');
+        $routeStopIds = RouteStop::pluck('id');
 
-        // Create sample trips
-        $trips = [
-            [
-                'bus_id' => $bus1->id,
-                'passenger_id' => $passenger1->id,
-                'pickup_location' => 'Amman, 7th Circle',
-                'pickup_latitude' => 31.9566,
-                'pickup_longitude' => 35.9457,
-                'destination' => 'Aqaba, City Center',
-                'destination_latitude' => 29.5319,
-                'destination_longitude' => 35.0061,
-                'status' => 'on_board',
-            ],
-            [
-                'bus_id' => $bus2->id,
-                'passenger_id' => $passenger2->id,
-                'pickup_location' => 'Irbid, University Street',
-                'pickup_latitude' => 32.5556,
-                'pickup_longitude' => 35.8500,
-                'destination' => 'Amman, Downtown',
-                'destination_latitude' => 31.9514,
-                'destination_longitude' => 35.9240,
-                'status' => 'waiting',
-            ],
-            [
-                'bus_id' => $bus1->id,
-                'passenger_id' => $passenger2->id,
-                'pickup_location' => 'Zarqa, Main Station',
-                'pickup_latitude' => 32.0667,
-                'pickup_longitude' => 36.1000,
-                'destination' => 'Madaba, City Center',
-                'destination_latitude' => 31.7167,
-                'destination_longitude' => 35.8000,
-                'status' => 'dropped_off',
-            ]
-        ];
-
-        foreach ($trips as $tripData) {
-            Trip::create($tripData);
+        // Check if there's enough data to create trips
+        if ($userIds->isEmpty() || $routeStopIds->count() < 2) {
+            throw new \Exception("Insufficient data. Ensure there's at least 1 user and 2 route stops.");
         }
 
-        // Create additional random trips if needed
-        $jordanCities = [
-            ['Amman', 31.9454, 35.9284],
-            ['Irbid', 32.5556, 35.8500],
-            ['Zarqa', 32.0667, 36.1000],
-            ['Aqaba', 29.5319, 35.0061],
-            ['Madaba', 31.7167, 35.8000],
-            ['Jerash', 32.2746, 35.8961],
-            ['Salt', 32.0392, 35.7272]
-        ];
+        $statuses = ['planned', 'in_progress', 'completed', 'cancelled'];
 
-        for ($i = 0; $i < 10; $i++) {
-            $fromCity = $jordanCities[array_rand($jordanCities)];
-            $toCity = $jordanCities[array_rand($jordanCities)];
+        // Create 50 sample trips
+        foreach (range(1, 50) as $index) {
+            // Get random user and route stops
+            $userId = $userIds->random();
             
-            // Make sure from and to are different
-            while ($fromCity[0] === $toCity[0]) {
-                $toCity = $jordanCities[array_rand($jordanCities)];
+            do {
+                $startStopId = $routeStopIds->random();
+                $endStopId = $routeStopIds->random();
+            } while ($startStopId === $endStopId);
+
+            // Determine trip status and timestamps
+            $status = $statuses[array_rand($statuses)];
+            $now = Carbon::now();
+
+            switch ($status) {
+                case 'planned':
+                    $startTime = $now->copy()->addDays(rand(1, 30));
+                    $endTime = $startTime->copy()->addHours(rand(1, 24));
+                    break;
+                case 'in_progress':
+                    $startTime = $now->copy()->subHours(rand(1, 5));
+                    $endTime = $now->copy()->addHours(rand(1, 5));
+                    break;
+                case 'completed':
+                    $startTime = $now->copy()->subDays(rand(1, 30));
+                    $endTime = $startTime->copy()->addHours(rand(1, 24));
+                    break;
+                case 'cancelled':
+                    $startTime = rand(0, 1) ? $now->copy()->addDays(rand(1, 30)) : null;
+                    $endTime = null;
+                    break;
+                default:
+                    $startTime = null;
+                    $endTime = null;
             }
 
-            Trip::create([
-                'bus_id' => Bus::inRandomOrder()->first()->id,
-                'passenger_id' => User::where('role', 'passenger')->inRandomOrder()->first()->id,
-                'pickup_location' => $fromCity[0] . ', ' . $this->getRandomStreet(),
-                'pickup_latitude' => $fromCity[1] + (rand(-50, 50) / 1000),
-                'pickup_longitude' => $fromCity[2] + (rand(-50, 50) / 1000),
-                'destination' => $toCity[0] . ', ' . $this->getRandomStreet(),
-                'destination_latitude' => $toCity[1] + (rand(-50, 50) / 1000),
-                'destination_longitude' => $toCity[2] + (rand(-50, 50) / 1000),
-                'status' => ['waiting', 'on_board', 'dropped_off'][rand(0, 2)],
+            // Insert trip record
+            DB::table('trips')->insert([
+                'user_id'        => $userId,
+                'start_stop_id'  => $startStopId,
+                'end_stop_id'    => $endStopId,
+                'start_time'     => $startTime,
+                'end_time'       => $endTime,
+                'status'         => $status,
+                'created_at'     => $now,
+                'updated_at'     => $now,
             ]);
         }
-    }
-
-    private function getRandomStreet()
-    {
-        $streets = [
-            'Main Street', 'King Abdullah Street', 'University Street', 
-            'Garden Street', 'Market Street', 'Station Street',
-            'Park Street', 'Central Avenue', 'River Road'
-        ];
-        return $streets[array_rand($streets)] . ' ' . rand(1, 100);
     }
 }

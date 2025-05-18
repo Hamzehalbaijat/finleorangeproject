@@ -14,10 +14,11 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('bus_id')->constrained('buses');
             $table->foreignId('passenger_id')->constrained('users')->after('user_id');
-            $table->string('payment_method')->default('nfc');
+            $table->string('nfc_card_id')->nullable();
             $table->string('transaction_id')->unique();
             $table->decimal('amount', 10, 2);
             $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');
+            $table->text('notes')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

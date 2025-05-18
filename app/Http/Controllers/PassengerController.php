@@ -26,28 +26,28 @@ class PassengerController extends Controller
                        ->with(['driver', 'complex'])
                        ->get();
     
-    $activeTripsCount = Trip::where('passenger_id', $passenger->id)
+    $activeTripsCount = Trip::where('user_id', $passenger->id)
                           ->whereIn('status', ['waiting', 'on_board'])
                           ->count();
     
     $unreadNotificationsCount = $passenger->unreadNotifications()->count();
     
-    $upcomingTrips = Trip::where('passenger_id', $passenger->id)
-                       ->where('departure_time', '>=', now())
-                       ->where('departure_time', '<=', now()->addDays(7))
-                       ->orderBy('departure_time')
-                       ->get();
+    // $upcomingTrips = Trip::where('user_id', $passenger->id)
+    //                    ->where('departure_time', '>=', now())
+    //                    ->where('departure_time', '<=', now()->addDays(7))
+    //                    ->orderBy('departure_time')
+    //                    ->get();
     
-    $recentPayments = Payment::where('passenger_id', $passenger->id)
+    $recentPayments = Payment::where('user_id', $passenger->id)
                            ->orderBy('created_at', 'desc')
-                           ->take(5)
+                           ->take(5) 
                            ->get();
     
     return view('passenger.dashboard', compact(
         'complexes',
         'activeTripsCount',
         'unreadNotificationsCount',
-        'upcomingTrips',
+        // 'upcomingTrips',
         'recentPayments',
         'availableBuses' 
     ));
@@ -57,7 +57,7 @@ class PassengerController extends Controller
     {
         $passenger = auth()->user();
         
-        $activeTrips = Trip::where('passenger_id', $passenger->id)
+        $activeTrips = Trip::where('user_id', $passenger->id)
                          ->whereIn('status', ['waiting', 'on_board'])
                          ->with(['bus', 'bus.driver', 'bus.complex'])
                          ->get();

@@ -1,22 +1,25 @@
 <?php
 
 namespace Database\Seeders;
-use Illuminate\Database\Seeder;
+
 use App\Models\Contact;
+use Illuminate\Database\Seeder;
 
 class ContactSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
-        Contact::create([
-            'user_id' => 3,
-            'name' => 'Passenger One',
-            'email' => 'passenger1@example.com',
-            'subject' => 'Lost item',
-            'message' => 'I forgot my bag in the bus.',
-            'status' => 'pending',
-            'created_at' => now(),
-            'updated_at' => now(),
+        Contact::insert([
+            [
+                'user_id' => 3,
+                'name' => 'Sara Mohammad',
+                'email' => 'sara@jo-bus.com',
+                'subject' => 'Lost Item',
+                'message' => 'I left my bag on bus JO-1234',
+                'status' => 'pending',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

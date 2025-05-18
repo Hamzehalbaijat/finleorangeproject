@@ -13,19 +13,21 @@ return new class extends Migration
     {
         // database/migrations/2014_10_12_000000_create_users_table.php
 
-Schema::create('users', function (Blueprint $table) {
-    $table->id();
-    $table->string('name');
-    $table->string('email')->unique();
-    $table->string('phone')->unique();
-    $table->timestamp('email_verified_at')->nullable();
-    $table->string('password');
-    $table->enum('role', ['passenger', 'driver', 'admin'])->default('passenger');
-    $table->decimal('balance', 10, 2)->default(0);
-    $table->rememberToken();
-    $table->softDeletes();
-    $table->timestamps();
-});
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('phone')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->enum('role', ['passenger', 'driver', 'admin'])->default('passenger');
+            $table->decimal('balance', 10, 2)->default(0);
+            $table->string('nfc_card_id')->nullable()->unique(); // لإضافة دفع NFC
+            $table->string('device_token')->nullable(); // For push notifications
+            $table->rememberToken();
+            $table->softDeletes();
+            $table->timestamps();
+        });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();

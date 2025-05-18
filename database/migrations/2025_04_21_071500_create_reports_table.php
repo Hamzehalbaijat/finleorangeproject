@@ -12,9 +12,12 @@ return new class extends Migration
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('bus_id')->constrained('buses');
+            $table->foreignId('bus_id')->nullable()->constrained('buses');
+            $table->foreignId('driver_id')->nullable()->constrained('users');
+            $table->string('title');
             $table->text('message');
-            $table->enum('status', ['pending', 'resolved'])->default('pending');
+            $table->enum('type', ['bus', 'driver', 'service', 'other'])->default('other');
+            $table->enum('status', ['pending', 'in_progress', 'resolved', 'rejected'])->default('pending');
             $table->softDeletes();
             $table->timestamps();
         });

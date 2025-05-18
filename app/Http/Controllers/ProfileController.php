@@ -12,10 +12,23 @@ use Illuminate\View\View;
 class ProfileController extends Controller
 {
     /**
-     * Display the user's profile form.
+     * Display the user's profile information (SHOW).
+     */
+    public function show(Request $request): View
+    {
+        // Get the currently authenticated user
+        $user = $request->user();
+
+        // Return the passenger.profile.show view, passing the user data
+        return view('passenger.profile.show', compact('user'));
+    }
+
+    /**
+     * Display the user's profile form (EDIT).
      */
     public function edit(Request $request): View
     {
+        // Assuming your edit view is still located at resources/views/profile/edit.blade.php
         return view('profile.edit', [
             'user' => $request->user(),
         ]);
@@ -34,7 +47,8 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        // Redirect back to the profile SHOW page after a successful update
+        return Redirect::route('passenger.profile.show')->with('status', 'Profile updated successfully!');
     }
 
     /**

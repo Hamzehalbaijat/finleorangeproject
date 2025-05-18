@@ -6,21 +6,20 @@ use Illuminate\Http\Request;
 
 class CheckRole
 {
-    public function handle(Request $request, Closure $next, ...$roles)
-    {
-        if (!auth()->check()) {
-            return redirect()->route('login');
-        }
-
-        $user = auth()->user();
-        
-        // Check if user has any of the required roles
-        foreach ($roles as $role) {
-            if ($user->role === $role) {
-                return $next($request);
+            public function handle(Request $request, Closure $next, ...$roles)
+        {
+            if (!auth()->check()) {
+                return redirect()->route('login'); // تأكد من أن 'login' هو اسم المسار الصحيح
             }
-        }
 
-        abort(403, 'Unauthorized action.');
-    }
+            $user = auth()->user();
+            
+            foreach ($roles as $role) {
+                if ($user->role === $role) {
+                    return $next($request);
+                }
+            }
+
+            abort(403, 'Unauthorized action.');
+        }
 }

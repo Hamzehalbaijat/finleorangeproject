@@ -1,23 +1,27 @@
 <?php
 
 namespace Database\Seeders;
-use Illuminate\Database\Seeder;
+
 use App\Models\Payment;
+use Illuminate\Database\Seeder;
 
 class PaymentSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
-        Payment::create([
-            'user_id' => 3, // Passenger One
-            'bus_id' => 1,
-            'passenger_id' => 3,
-            'payment_method' => 'nfc',
-            'transaction_id' => 'TXN123456',
-            'amount' => 1.50,
-            'status' => 'completed',
-            'created_at' => now(),
-            'updated_at' => now(),
+        Payment::insert([
+            [
+                'user_id' => 3,
+                'bus_id' => 1,
+                'passenger_id' => 3,
+                'nfc_card_id' => 'NFC-PAX-001',
+                'transaction_id' => 'TXN-'.uniqid(),
+                'amount' => 1.50,
+                'status' => 'completed',
+                'notes' => 'Morning commute payment',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }
